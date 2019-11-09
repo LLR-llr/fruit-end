@@ -15,6 +15,10 @@ Route::resource('api/goods','admin/goods');
 
 
 Route::resource('api/index','index/index');
+Route::resource('api/ingoods','index/goods');
+Route::resource('api/incategory','index/category');
+Route::resource('api/users','index/users');
+Route::resource('api/login','index/login');
 return [
     '__pattern__' => [
         'name' => '\w+',

@@ -16,7 +16,7 @@ class Index extends Controller
     public function index()
     {
         try {
-            $cate = Db::table('category')->field('id,cname,thumb')->order('sort', 'asc')->limit(0, 2)->select();
+            $cate = Db::table('category')->field('id,cname,thumb')->order('sort', 'asc')->limit(0,4)->select();
             $len = count($cate);
             if ($len) {
                 for ($i = 0; $i < $len; $i++) {
@@ -50,7 +50,7 @@ class Index extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -72,7 +72,31 @@ class Index extends Controller
      */
     public function read($id)
     {
-        //
+        $data=$this->request->get();
+        if(isset($data['count'])&&!empty($data['count'])){
+            $page=$data['count'];
+        }else{
+        $page=1;}
+        if(isset($data['limit'])&&!empty($data['limit'])){
+            $limit=$data['limit'];
+        }else{
+            $limit=1;}
+        $cate=Db::table('goods')->where('cid',$id)->paginate($limit,false,['page'=>$page]);
+        $total=$cate->total();
+        $data=$cate->items();
+        if($total>0&& count($data)){
+            return json([
+                'code'=>200,
+                'msg'=>'查询成功',
+                'data'=>$data,
+                'total'=>$total
+            ]);
+        }else{
+            return json([
+                'code'=>404,
+                'msg'=>'查询失败',
+            ]);
+        }
     }
 
     /**
